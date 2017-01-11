@@ -1,0 +1,13 @@
+{
+    "name": "aautar/cloud-storage-gateway",
+    "description": "Gateway for cloud storage services",
+    "authors": [
+        {
+            "name": "Avishkar Autar",
+            "email": "aautar@digital-radiation.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.20"
+    }
+}
