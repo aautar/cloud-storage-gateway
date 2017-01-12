@@ -122,9 +122,25 @@ class S3Driver
         return true;
     }
 
-    public function getObjectAuthenticatedURL($bucket, $name, $lifetime=300)
+    /**
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */
+    public function getObjectAuthenticatedURL($bucket, $key, $lifetimeSec=300)
     {
-        $this->s3Client->createPresignedRequest($args);
+        $cmd = $this->s3Client->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key'    => $key
+        ]);
+
+        try {
+            $req = $this->s3Client->createPresignedRequest($cmd, "+{$lifetimeSec} seconds");
+            return (string)$req->getUri();
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
     }
 
     /**
