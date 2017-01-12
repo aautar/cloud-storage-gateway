@@ -33,6 +33,26 @@ class S3Driver implements Driver
     }
 
     /**
+     *
+     * @param string $bucket
+     * @return boolean
+     */
+    public function isBucketAccessible($bucket)
+    {
+        try
+        {
+            $this->s3Client->headBucket([
+                'Bucket' => $bucket
+            ]);
+        }
+        catch (S3Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param string $bucket
      * @param string $key
      * @return ObjectInfo|null

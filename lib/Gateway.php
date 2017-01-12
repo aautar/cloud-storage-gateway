@@ -18,6 +18,16 @@ class Gateway
     }
 
     /**
+     *
+     * @param string $bucket
+     * @return boolean
+     */
+    public function isBucketAccessible($bucket)
+    {
+        return $this->driver->isBucketAccessible($bucket);
+    }
+
+    /**
      * @param string $bucket
      * @param string $key
      * @return ObjectInfo|null

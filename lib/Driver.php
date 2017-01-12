@@ -5,6 +5,13 @@ namespace CloudStorageGateway;
 interface Driver
 {
     /**
+     *
+     * @param string $bucket
+     * @return boolean
+     */
+    public function isBucketAccessible($bucket);
+
+    /**
      * @param string $bucket
      * @param string $key
      * @return ObjectInfo|null
