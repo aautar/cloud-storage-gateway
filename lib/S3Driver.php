@@ -220,4 +220,39 @@ class S3Driver
 
         return true;
     }
+
+    /**
+     *
+     * @param string $filepath
+     * @param string $bucket
+     * @param string $key
+     * @param string $contentType
+     * @param bool $isPublic
+     * @return bool
+     */
+    public function putObjectFromFile($filepath, $bucket, $key, $contentType=null, $isPublic=false)
+    {
+        $reqParams = [
+            'Bucket' => $bucket,
+            'Key' => $key,
+            'SourceFile' => $filepath,
+            'ACL' => 'private'
+        ];
+
+        if($contentType) {
+            $reqParams['Content-Type'] = $contentType;
+        }
+
+        if($isPublic) {
+            $reqParams['ACL'] = 'public-read';
+        }
+
+        try {
+            $this->s3Client->putObject($reqParams);
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+
+        return true;
+    }
 }
