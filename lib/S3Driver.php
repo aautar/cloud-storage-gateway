@@ -205,7 +205,7 @@ class S3Driver implements Driver
         ];
 
         if($contentType) {
-            $reqParams['Content-Type'] = $contentType;
+            $reqParams['ContentType'] = $contentType;
         }
 
         if($isPublic) {
@@ -240,7 +240,7 @@ class S3Driver implements Driver
         ];
 
         if($contentType) {
-            $reqParams['Content-Type'] = $contentType;
+            $reqParams['ContentType'] = $contentType;
         }
 
         if($isPublic) {
