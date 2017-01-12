@@ -5,7 +5,7 @@ namespace CloudStorageGateway;
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 
-class S3Driver
+class S3Driver implements Driver
 {
     const HTTP_NOT_FOUND = 404;
 
