@@ -127,18 +127,81 @@ class S3Driver
         $this->s3Client->createPresignedRequest($args);
     }
 
+    /**
+     * @param string $bucket
+     * @param string $key
+     * @return bool
+     */
     public function deleteObject($bucket, $key)
     {
-        $this->s3Client->deleteObject();
+        try
+        {
+            $this->s3Client->deleteObject([
+                    'Bucket' => $bucket,
+                    'Key' => $key
+                ]);
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+
+        return true;
     }
 
+    /**
+     * @param string $fromBucket
+     * @param string $fromKey
+     * @param string $toBucket
+     * @param string $toKey
+     * @return bool
+     */
     public function copyObject($fromBucket, $fromKey, $toBucket, $toKey)
     {
-        $this->s3Client->copy($fromB, $fromK, $destB, $destK);
+        try
+        {
+            $this->s3Client->copyObject([
+                'CopySource' => urlencode($fromBucket . "/" . $fromKey),
+                'Bucket' => $toBucket,
+                'Key' => $toKey
+            ]);
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+
+        return true;
     }
 
-    public function putObjectFile($srcFilepath, $destBucket, $destKey, $contentType=null, $isPublic=false)
+    /**
+     *
+     * @param string $data
+     * @param string $bucket
+     * @param string $key
+     * @param string $contentType
+     * @param bool $isPublic
+     * @return bool
+     */
+    public function putObjectFromString($data, $bucket, $key, $contentType=null, $isPublic=false)
     {
-        $this->s3Client->putObject($args);
+        $reqParams = [
+            'Body' => $data,
+            'Bucket' => $bucket,
+            'Key' => $key,
+            'ACL' => 'private'
+        ];
+
+        if($contentType) {
+            $reqParams['Content-Type'] = $contentType;
+        }
+
+        if($isPublic) {
+            $reqParams['ACL'] = 'public-read';
+        }
+
+        try {
+            $this->s3Client->putObject($reqParams);
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+
+        return true;
     }
 }
