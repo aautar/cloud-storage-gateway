@@ -1,0 +1,16 @@
+machine:
+  pre:
+    - mkdir ~/.yarn-cache
+  php:
+    version: 7.0.4
+  node:
+    version: stable
+
+dependencies:
+  override:
+    - composer install
+
+test:
+  override:
+    - vendor/bin/phpunit --bootstrap vendor/autoload.php tests
+ 
