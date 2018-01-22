@@ -23,7 +23,7 @@ class ObjectInfo
         $this->lastModified = $lastModified;
     }
 
-    public function getUrl()
+    public function getURL()
     {
         return $this->url;
     }

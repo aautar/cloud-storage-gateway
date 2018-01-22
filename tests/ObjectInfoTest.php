@@ -10,7 +10,7 @@ class ObjectInfoTest extends \PHPUnit_Framework_TestCase
     public function testGetUrlReturnsObjectUrl()
     {
         $objInfo = new ObjectInfo("https://url", "content-type", 111, "tag", new DateTime("2016-01-01"));
-        $this->assertEquals("https://url", $objInfo->getUrl());
+        $this->assertEquals("https://url", $objInfo->getURL());
     }
 
     public function testGetContentTypeReturnsContentType()
