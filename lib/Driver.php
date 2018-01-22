@@ -42,6 +42,14 @@ interface Driver
     public function getObjectAuthenticatedURL($bucket, $key, $lifetimeSec=300);
 
     /**
+     *
+     * @param string $bucket
+     * @param string $key
+     * @returns string
+     */
+    public function buildObjectURL($bucket, $key);
+
+    /**
      * @param string $bucket
      * @param string $key
      * @return bool

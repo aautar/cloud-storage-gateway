@@ -4,6 +4,8 @@ namespace CloudStorageGateway;
 
 class ObjectInfo
 {
+    protected $url;
+
     protected $contentType;
 
     protected $contentLength;
@@ -12,12 +14,18 @@ class ObjectInfo
 
     protected $lastModified;
 
-    public function __construct($contentType, $contentLength, $eTag, $lastModified)
+    public function __construct($url, $contentType, $contentLength, $eTag, $lastModified)
     {
+        $this->url = $url;
         $this->contentType = $contentType;
         $this->contentLength = $contentLength;
         $this->eTag = $eTag;
         $this->lastModified = $lastModified;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     public function getContentType()

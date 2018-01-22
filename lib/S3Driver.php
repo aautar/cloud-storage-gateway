@@ -15,6 +15,11 @@ class S3Driver implements Driver
     protected $s3Client;
 
     /**
+     * @var string
+     */
+    protected $region;
+
+    /**
      *
      * @param string $accessKey
      * @param string $secretKey
@@ -22,6 +27,8 @@ class S3Driver implements Driver
      */
     public function __construct($accessKey, $secretKey, $region)
     {
+        $this->region = $region;
+        
         $this->s3Client = new S3Client([
             'version' => 'latest',
             'region'  => $region,
@@ -77,11 +84,12 @@ class S3Driver implements Driver
         }
 
         return new ObjectInfo(
-                $result['ContentType'],
-                $result['ContentLength'],
-                trim($result['ETag'], '"'),
-                new \DateTime($result['LastModified'])
-            );
+            $this->buildObjectURL($bucket, $key),
+            $result['ContentType'],
+            $result['ContentLength'],
+            trim($result['ETag'], '"'),
+            new \DateTime($result['LastModified'])
+        );
     }
 
     /**
@@ -161,6 +169,17 @@ class S3Driver implements Driver
         } catch(S3Exception $e) {
             throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
         }
+    }
+
+    /**
+     *
+     * @param string $bucket
+     * @param string $key
+     * @returns string
+     */
+    public function buildObjectURL($bucket, $key)
+    {
+        return "https://{$this->region}.amazonaws.com/{$bucket}/{$key}";
     }
 
     /**

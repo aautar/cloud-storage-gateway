@@ -72,6 +72,16 @@ class Gateway
     /**
      * @param string $bucket
      * @param string $key
+     * @return string
+     */
+    public function buildObjectURL($bucket, $key)
+    {
+        return $this->driver->buildObjectURL($bucket, $key);
+    }
+
+    /**
+     * @param string $bucket
+     * @param string $key
      * @return bool
      */
     public function deleteObject($bucket, $key)
