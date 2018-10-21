@@ -172,6 +172,27 @@ class S3Driver implements Driver
     }
 
     /**
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */
+    public function getPresignedPutObjectRequestURL($bucket, $key, $lifetimeSec=300)
+    {
+        $cmd = $this->s3Client->getCommand('PutObject', [
+            'Bucket' => $bucket,
+            'Key'    => $key
+        ]);
+
+        try {
+            $req = $this->s3Client->createPresignedRequest($cmd, "+{$lifetimeSec} seconds");
+            return (string)$req->getUri();
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+    }
+
+    /**
      *
      * @param string $bucket
      * @param string $key
