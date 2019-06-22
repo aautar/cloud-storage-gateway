@@ -20,6 +20,28 @@ class S3Driver implements Driver
     protected $region;
 
     /**
+     * @param string $command
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */    
+    protected function createPresignedRequest($command, $bucket, $key, $lifetimeSec=300)
+    {
+        $cmd = $this->s3Client->getCommand($command, [
+            'Bucket' => $bucket,
+            'Key'    => $key
+        ]);
+
+        try {
+            $req = $this->s3Client->createPresignedRequest($cmd, "+{$lifetimeSec} seconds");
+            return (string)$req->getUri();
+        } catch(S3Exception $e) {
+            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
+        }
+    }
+
+    /**
      *
      * @param string $accessKey
      * @param string $secretKey
@@ -158,17 +180,18 @@ class S3Driver implements Driver
      */
     public function getObjectAuthenticatedURL($bucket, $key, $lifetimeSec=300)
     {
-        $cmd = $this->s3Client->getCommand('GetObject', [
-            'Bucket' => $bucket,
-            'Key'    => $key
-        ]);
+        return $this->createPresignedRequest('GetObject', $bucket, $key, $lifetimeSec);
+    }
 
-        try {
-            $req = $this->s3Client->createPresignedRequest($cmd, "+{$lifetimeSec} seconds");
-            return (string)$req->getUri();
-        } catch(S3Exception $e) {
-            throw new DriverException("S3 client failure", $e->getStatusCode(), $e);
-        }
+    /**
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */    
+    public function getPutObjectPresignedURL($bucket, $key, $lifetimeSec=300)
+    {
+        return $this->createPresignedRequest('GetObject', $bucket, $key, $lifetimeSec);
     }
 
     /**
