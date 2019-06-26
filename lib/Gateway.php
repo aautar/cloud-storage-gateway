@@ -69,6 +69,17 @@ class Gateway
         return $this->driver->getObjectAuthenticatedURL($bucket, $key, $lifetimeSec);
     }
 
+        /**
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */
+    public function getPutObjectPresignedURL($bucket, $key, $lifetimeSec=300)
+    {
+        return $this->driver->getPutObjectPresignedURL($bucket, $key, $lifetimeSec);
+    }
+
     /**
      * @param string $bucket
      * @param string $key

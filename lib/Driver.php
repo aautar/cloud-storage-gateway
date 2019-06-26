@@ -42,6 +42,14 @@ interface Driver
     public function getObjectAuthenticatedURL($bucket, $key, $lifetimeSec=300);
 
     /**
+     * @param string $bucket
+     * @param string $key
+     * @param int lifetime in seconds
+     * @return string
+     */
+    public function getPutObjectPresignedURL($bucket, $key, $lifetimeSec=300);
+
+    /**
      *
      * @param string $bucket
      * @param string $key

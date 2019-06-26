@@ -34,6 +34,6 @@ class ObjectInfoTest extends \PHPUnit_Framework_TestCase
     public function testGetLetLastModifiedReturnsLastModifiedTimestamp()
     {
         $objInfo = new ObjectInfo("https://url", "content-type", 111, "tag", new DateTime("2016-01-01"));
-        $this->assertEquals(new DateTime("2016-01-01"), $objInfo->getLastModified());
+        $this->assertEquals((new DateTime("2016-01-01"))->format(DateTime::ATOM), $objInfo->getLastModified()->format(DateTime::ATOM));
     }        
 }
