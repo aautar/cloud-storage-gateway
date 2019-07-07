@@ -2,7 +2,10 @@
 
 namespace CloudStorageGateway;
 
-class ObjectInfo
+use DateTime;
+use JsonSerializable;
+
+class ObjectInfo implements JsonSerializable
 {
     protected $url;
 
@@ -47,4 +50,15 @@ class ObjectInfo
     {
         return $this->lastModified;
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'url' => $this->getUrl(),
+            'contentType' => $this->getContentType(),
+            'contentLength' => $this->getContentLength(),
+            'eTag' => $this->getETag(),
+            'lastModified' => $this->getLastModified()->format(DateTime::ATOM),
+        ];
+    }    
 }

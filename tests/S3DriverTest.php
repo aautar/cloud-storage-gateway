@@ -2,9 +2,11 @@
 
 namespace CloudStorageGateway\Tests;
 
+use DateTime;
 use Aws\Command;
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
+use CloudStorageGateway\ObjectInfo;
 use CloudStorageGateway\S3Driver;
 use Mockery as m;
 
@@ -34,6 +36,27 @@ class S3DriverTest extends \PHPUnit_Framework_TestCase
         $url = $driver->buildObjectURL("bucket", "key");
 
         $this->assertEquals($expectedUrl, $url);
+    }
+
+    public function testGetObjectInfoReturnsCorrectObjectInfo()
+    {
+        $expectedObjectInfo = new ObjectInfo("https://us-east-2.amazonaws.com/bucket/key", "content-type", 111, "tag", new DateTime("2016-01-01"));
+
+        $this->s3ClientMock
+           ->shouldReceive('headObject')
+           ->once()
+           ->with(['Bucket' => "bucket", "Key" => "key"])
+           ->andReturn([
+               "ContentType" => "content-type",
+               "ContentLength" => 111,
+               "ETag" => "tag",
+               "LastModified" => "2016-01-01"
+           ]);
+
+        $driver = $this->getDriver();
+        $info = $driver->getObjectInfo("bucket", "key");
+
+        $this->assertEquals($expectedObjectInfo->jsonSerialize(), $info->jsonSerialize());
     }
 
     public function testIsBucketAccessibleReturnsTrueForAccessibleBucket()
