@@ -92,7 +92,9 @@ class S3DriverTest extends \PHPUnit_Framework_TestCase
         };
 
         $this->s3ClientMock
-           ->shouldReceive('getCommand');
+           ->shouldReceive('getCommand')
+           ->once()
+           ->with("PutObject", ['Bucket' => "testBucket", "Key" => "path/to/file"]);
 
         $this->s3ClientMock
            ->shouldReceive('createPresignedRequest')

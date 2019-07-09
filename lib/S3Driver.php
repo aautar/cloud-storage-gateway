@@ -191,7 +191,7 @@ class S3Driver implements Driver
      */    
     public function getPutObjectPresignedURL($bucket, $key, $lifetimeSec=300)
     {
-        return $this->createPresignedRequest('GetObject', $bucket, $key, $lifetimeSec);
+        return $this->createPresignedRequest('PutObject', $bucket, $key, $lifetimeSec);
     }
 
     /**
