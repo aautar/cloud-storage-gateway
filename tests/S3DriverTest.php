@@ -14,7 +14,7 @@ use Mockery as m;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class S3DriverTest extends \PHPUnit_Framework_TestCase
+class S3DriverTest extends \PHPUnit\Framework\TestCase
 {
     private $s3ClientMock;
 
@@ -23,7 +23,7 @@ class S3DriverTest extends \PHPUnit_Framework_TestCase
         return new S3Driver("access", "secret", "us-east-2");
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->s3ClientMock = m::mock('overload:' . S3Client::class);
     }

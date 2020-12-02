@@ -5,7 +5,7 @@ namespace CloudStorageGateway\Tests;
 use CloudStorageGateway\ObjectInfo;
 use \DateTime;
 
-class ObjectInfoTest extends \PHPUnit_Framework_TestCase
+class ObjectInfoTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetUrlReturnsObjectUrl()
     {

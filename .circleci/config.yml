@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Running tests
           command: |
-              vendor/bin/phpunit --bootstrap vendor/autoload.php tests
+              composer test
             
 deployment:
   trigger_tag:
