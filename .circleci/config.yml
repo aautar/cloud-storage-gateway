@@ -32,6 +32,11 @@ jobs:
           command: |
               composer test
             
-deployment:
-  trigger_tag:
-    tag: /.*/            
+workflows:
+  version: 2
+  build-n-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
