@@ -16,7 +16,7 @@
         ]
     },    
     "require": {
-        "aws/aws-sdk-php": "^3.20",
+        "aws/aws-sdk-php": "^3.164",
         "php": "^7.0.0"
     },
     "require-dev": {
