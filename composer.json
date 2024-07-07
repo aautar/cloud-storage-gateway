@@ -12,15 +12,15 @@
     },
     "scripts": {
         "test": [
-            "phpunit --bootstrap vendor/autoload.php tests"
+            "vendor/bin/phpunit --no-coverage"
         ]
-    },    
+    },
     "require": {
-        "aws/aws-sdk-php": "^3.164",
-        "php": "^7.0.0"
+        "aws/aws-sdk-php": "^3.315",
+        "php": "^7.2.0 || ^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
-        "mockery/mockery": "^1.2"
+        "phpunit/phpunit": "^11.2",
+        "mockery/mockery": "^1.6"
     }
 }
