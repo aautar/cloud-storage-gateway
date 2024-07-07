@@ -9,11 +9,11 @@ use Aws\S3\Exception\S3Exception;
 use CloudStorageGateway\ObjectInfo;
 use CloudStorageGateway\S3Driver;
 use Mockery as m;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(true)]
 class S3DriverTest extends \PHPUnit\Framework\TestCase
 {
     private $s3ClientMock;
