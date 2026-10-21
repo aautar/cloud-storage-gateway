@@ -4,138 +4,91 @@ namespace CloudStorageGateway;
 
 class Gateway
 {
-    /**
-     * @var Driver
-     */
-    protected $driver;
+    protected Driver $driver;
 
-    /**
-     * @param \CloudStorageGateway\Driver $driver
-     */
     public function __construct(Driver $driver)
     {
         $this->driver = $driver;
     }
 
-    /**
-     *
-     * @param string $bucket
-     * @return boolean
-     */
-    public function isBucketAccessible($bucket)
+    public function isBucketAccessible(string $bucket): bool
     {
         return $this->driver->isBucketAccessible($bucket);
     }
 
     /**
-     * @param string $bucket
-     * @param string $key
-     * @return ObjectInfo|null
+     * @throws DriverException
      */
-    public function getObjectInfo($bucket, $key)
+    public function getObjectInfo(string $bucket, string $key): ?ObjectInfo
     {
         return $this->driver->getObjectInfo($bucket, $key);
     }
 
     /**
-     * @param string $bucket
-     * @param string $key
-     * @return string
+     * @throws DriverException
      */
-    public function getObjectAsString($bucket, $key)
+    public function getObjectAsString(string $bucket, string $key): ?string
     {
         return $this->driver->getObjectAsString($bucket, $key);
     }
 
     /**
-     * @param string $bucket
-     * @param string $key
-     * @param string $saveToFile
-     * @return bool
+     * @throws DriverException
      */
-    public function getObjectAsFile($bucket, $key, $saveToFile)
+    public function getObjectAsFile(string $bucket, string $key, string $saveToFile): bool
     {
         return $this->driver->getObjectAsFile($bucket, $key, $saveToFile);
     }
 
     /**
-     * @param string $bucket
-     * @param string $key
-     * @param int lifetime in seconds
-     * @return string
+     * @throws DriverException
      */
-    public function getObjectAuthenticatedURL($bucket, $key, $lifetimeSec=300)
+    public function getObjectAuthenticatedURL(string $bucket, string $key, int $lifetimeSec=300): string
     {
         return $this->driver->getObjectAuthenticatedURL($bucket, $key, $lifetimeSec);
     }
 
-        /**
-     * @param string $bucket
-     * @param string $key
-     * @param int lifetime in seconds
-     * @return string
+    /**
+     * @throws DriverException
      */
-    public function getPutObjectPresignedURL($bucket, $key, $lifetimeSec=300)
+    public function getPutObjectPresignedURL(string $bucket, string $key, int $lifetimeSec=300): string
     {
         return $this->driver->getPutObjectPresignedURL($bucket, $key, $lifetimeSec);
     }
 
-    /**
-     * @param string $bucket
-     * @param string $key
-     * @return string
-     */
-    public function buildObjectURL($bucket, $key)
+    public function buildObjectURL(string $bucket, string $key): string
     {
         return $this->driver->buildObjectURL($bucket, $key);
     }
 
     /**
-     * @param string $bucket
-     * @param string $key
-     * @return bool
+     * @throws DriverException
      */
-    public function deleteObject($bucket, $key)
+    public function deleteObject(string $bucket, string $key): bool
     {
         return $this->driver->deleteObject($bucket, $key);
     }
 
     /**
-     * @param string $fromBucket
-     * @param string $fromKey
-     * @param string $toBucket
-     * @param string $toKey
-     * @return bool
+     * @throws DriverException
      */
-    public function copyObject($fromBucket, $fromKey, $toBucket, $toKey)
+    public function copyObject(string $fromBucket, string $fromKey, string $toBucket, string $toKey): bool
     {
         return $this->driver->copyObject($fromBucket, $fromKey, $toBucket, $toKey);
     }
 
     /**
-     *
-     * @param string $data
-     * @param string $bucket
-     * @param string $key
-     * @param string $contentType
-     * @param bool $isPublic
-     * @return bool
+     * @throws DriverException
      */
-    public function putObjectFromString($data, $bucket, $key, $contentType=null, $isPublic=false)
+    public function putObjectFromString(string $data, string $bucket, string $key, ?string $contentType=null, bool $isPublic=false): bool
     {
         return $this->driver->putObjectFromString($data, $bucket, $key, $contentType, $isPublic);
     }
 
     /**
-     *
-     * @param string $filepath
-     * @param string $bucket
-     * @param string $key
-     * @param string $contentType
-     * @param bool $isPublic
-     * @return bool
+     * @throws DriverException
      */
-    public function putObjectFromFile($filepath, $bucket, $key, $contentType=null, $isPublic=false)
+    public function putObjectFromFile(string $filepath, string $bucket, string $key, ?string $contentType=null, bool $isPublic=false): bool
     {
         return $this->driver->putObjectFromFile($filepath, $bucket, $key, $contentType, $isPublic);
     }

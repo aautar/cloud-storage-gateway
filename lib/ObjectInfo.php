@@ -7,17 +7,17 @@ use JsonSerializable;
 
 class ObjectInfo implements JsonSerializable
 {
-    protected $url;
+    protected string $url;
 
-    protected $contentType;
+    protected string $contentType;
 
-    protected $contentLength;
+    protected int $contentLength;
 
-    protected $eTag;
+    protected string $eTag;
 
-    protected $lastModified;
+    protected DateTime $lastModified;
 
-    public function __construct($url, $contentType, $contentLength, $eTag, $lastModified)
+    public function __construct(string $url, string $contentType, int $contentLength, string $eTag, DateTime $lastModified)
     {
         $this->url = $url;
         $this->contentType = $contentType;
@@ -26,27 +26,27 @@ class ObjectInfo implements JsonSerializable
         $this->lastModified = $lastModified;
     }
 
-    public function getURL()
+    public function getURL(): string
     {
         return $this->url;
     }
 
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
 
-    public function getContentLength()
+    public function getContentLength(): int
     {
         return $this->contentLength;
     }
 
-    public function getETag()
+    public function getETag(): string
     {
         return $this->eTag;
     }
 
-    public function getLastModified()
+    public function getLastModified(): DateTime
     {
         return $this->lastModified;
     }
