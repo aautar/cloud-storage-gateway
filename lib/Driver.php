@@ -82,7 +82,7 @@ interface Driver
      * @param bool $isPublic
      * @return bool
      */
-    public function putObjectFromString(string $data, string $bucket, string $key, string $contentType=null, bool $isPublic=false): bool;
+    public function putObjectFromString(string $data, string $bucket, string $key, ?string $contentType=null, bool $isPublic=false): bool;
 
     /**
      *
@@ -93,5 +93,5 @@ interface Driver
      * @param bool $isPublic
      * @return bool
      */
-    public function putObjectFromFile(string $filepath, string $bucket, string $key, string $contentType=null, bool $isPublic=false): bool;
+    public function putObjectFromFile(string $filepath, string $bucket, string $key, ?string $contentType=null, bool $isPublic=false): bool;
 }
