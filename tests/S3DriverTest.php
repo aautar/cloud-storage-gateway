@@ -28,9 +28,15 @@ class S3DriverTest extends \PHPUnit\Framework\TestCase
         $this->s3ClientMock = m::mock('overload:' . S3Client::class);
     }
 
-    public function testBuildObjectUrlReturnsCorrectUrl()
+    public function testBuildObjectUrlReturnsUrlFromClient()
     {
-        $expectedUrl = "https://us-east-2.amazonaws.com/bucket/key";
+        $expectedUrl = "https://bucket.s3.us-east-2.amazonaws.com/key";
+
+        $this->s3ClientMock
+           ->shouldReceive('getObjectUrl')
+           ->once()
+           ->with("bucket", "key")
+           ->andReturn($expectedUrl);
 
         $driver = $this->getDriver();
         $url = $driver->buildObjectURL("bucket", "key");
@@ -40,7 +46,13 @@ class S3DriverTest extends \PHPUnit\Framework\TestCase
 
     public function testGetObjectInfoReturnsCorrectObjectInfo()
     {
-        $expectedObjectInfo = new ObjectInfo("https://us-east-2.amazonaws.com/bucket/key", "content-type", 111, "tag", new DateTime("2016-01-01"));
+        $expectedObjectInfo = new ObjectInfo("https://bucket.s3.us-east-2.amazonaws.com/key", "content-type", 111, "tag", new DateTime("2016-01-01"));
+
+        $this->s3ClientMock
+           ->shouldReceive('getObjectUrl')
+           ->once()
+           ->with("bucket", "key")
+           ->andReturn("https://bucket.s3.us-east-2.amazonaws.com/key");
 
         $this->s3ClientMock
            ->shouldReceive('headObject')

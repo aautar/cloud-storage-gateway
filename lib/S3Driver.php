@@ -11,8 +11,6 @@ class S3Driver implements Driver
 
     protected S3Client $s3Client;
 
-    protected string $region;
-
     /**
      * @throws DriverException
      */
@@ -33,8 +31,6 @@ class S3Driver implements Driver
 
     public function __construct(string $accessKey, string $secretKey, string $region)
     {
-        $this->region = $region;
-        
         $this->s3Client = new S3Client([
             'version' => 'latest',
             'region'  => $region,
@@ -162,7 +158,7 @@ class S3Driver implements Driver
 
     public function buildObjectURL(string $bucket, string $key): string
     {
-        return "https://{$this->region}.amazonaws.com/{$bucket}/{$key}";
+        return $this->s3Client->getObjectUrl($bucket, $key);
     }
 
     /**
