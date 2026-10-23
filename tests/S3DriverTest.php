@@ -6,7 +6,9 @@ use DateTime;
 use Aws\Command;
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
+use CloudStorageGateway\DriverException;
 use CloudStorageGateway\ObjectInfo;
+use GuzzleHttp\Psr7\Response;
 use CloudStorageGateway\S3Driver;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -116,6 +118,90 @@ class S3DriverTest extends \PHPUnit\Framework\TestCase
         $driver = $this->getDriver();
         $this->assertEquals("https://presigned-url", $driver->getPutObjectPresignedURL("testBucket", "path/to/file", 500));
 
+    }
+
+    /**
+     * S3 percent-decodes CopySource (path semantics, so "+" is literal), hence rawurldecode()
+     */
+    private function copySourceDecodesTo(string $expectedSource): \Closure
+    {
+        return function($params) use ($expectedSource) {
+            return rawurldecode($params['CopySource']) === $expectedSource;
+        };
+    }
+
+    public function testCopyObjectCopiesSourceToDestination()
+    {
+        $this->s3ClientMock
+           ->shouldReceive('copyObject')
+           ->once()
+           ->with(m::on(function($params) {
+               return $params['Bucket'] === "toBucket"
+                   && $params['Key'] === "to/key"
+                   && $this->copySourceDecodesTo("fromBucket/from/key")($params);
+           }))
+           ->andReturn([]);
+
+        $driver = $this->getDriver();
+        $this->assertEquals(true, $driver->copyObject("fromBucket", "from/key", "toBucket", "to/key"));
+    }
+
+    public function testCopyObjectEncodesSpacesInSourceKey()
+    {
+        $this->s3ClientMock
+           ->shouldReceive('copyObject')
+           ->once()
+           ->with(m::on($this->copySourceDecodesTo("fromBucket/my file.txt")))
+           ->andReturn([]);
+
+        $driver = $this->getDriver();
+        $this->assertEquals(true, $driver->copyObject("fromBucket", "my file.txt", "toBucket", "to/key"));
+    }
+
+    public function testCopyObjectEncodesPlusInSourceKey()
+    {
+        $this->s3ClientMock
+           ->shouldReceive('copyObject')
+           ->once()
+           ->with(m::on($this->copySourceDecodesTo("fromBucket/a+b.txt")))
+           ->andReturn([]);
+
+        $driver = $this->getDriver();
+        $this->assertEquals(true, $driver->copyObject("fromBucket", "a+b.txt", "toBucket", "to/key"));
+    }
+
+    public function testCopyObjectThrowsDriverExceptionOnS3Failure()
+    {
+        $s3Exception = new S3Exception("access denied", new Command("copyObject"), ['response' => new Response(403)]);
+
+        $this->s3ClientMock
+           ->shouldReceive('copyObject')
+           ->once()
+           ->andThrow($s3Exception);
+
+        $driver = $this->getDriver();
+
+        try {
+            $driver->copyObject("fromBucket", "from/key", "toBucket", "to/key");
+            $this->fail("Expected DriverException");
+        } catch(DriverException $e) {
+            $this->assertEquals(403, $e->getCode());
+            $this->assertSame($s3Exception, $e->getPrevious());
+        }
+    }
+
+    public function testCopyObjectThrowsDriverExceptionWithZeroCodeWhenS3FailureHasNoStatusCode()
+    {
+        $this->s3ClientMock
+           ->shouldReceive('copyObject')
+           ->once()
+           ->andThrow(new S3Exception("connection error", new Command("copyObject")));
+
+        $driver = $this->getDriver();
+
+        $this->expectException(DriverException::class);
+        $this->expectExceptionCode(0);
+        $driver->copyObject("fromBucket", "from/key", "toBucket", "to/key");
     }
 
 }

@@ -187,7 +187,7 @@ class S3Driver implements Driver
         try
         {
             $this->s3Client->copyObject([
-                'CopySource' => urlencode($fromBucket . "/" . $fromKey),
+                'CopySource' => $fromBucket . "/" . rawurlencode($fromKey),
                 'Bucket' => $toBucket,
                 'Key' => $toKey
             ]);
